@@ -38,6 +38,7 @@ if ('serviceWorker' in navigator) {
       targets: savedData.targets || EXERCISES.reduce((acc, { id, defaultTarget }) => ({ ...acc, [id]: defaultTarget }), {}),
       completedDays: savedData.completedDays || 0,
       lastReset: savedData.lastReset || null,
+      lifetimeTotals: savedData.lifetimeTotals || EXERCISES.reduce((acc, { id }) => ({ ...acc, [id]: 0 }), {}),
     };
   
     // Adjust targets after loading data
@@ -58,24 +59,31 @@ if ('serviceWorker' in navigator) {
       const currentElement = d.getElementById(`${id}-current`);
       const targetElement = d.getElementById(`${id}-target`);
       const progressBarElement = d.getElementById(`${id}-progress-bar`);
-
+  
       const currentValue = data.progress[id] || 0;
       const targetValue = data.targets[id];
-
-      // Update the progress and target display
+  
+      // Update current progress and target
       currentElement.innerText = id === 'day-running' ? currentValue.toFixed(1) : currentValue;
       targetElement.innerText = id === 'day-running' ? `${targetValue.toFixed(1)}km` : targetValue;
-
+  
       // Update progress bar
       const progress = (currentValue / targetValue) * 100;
       progressBarElement.style.width = `${progress}%`;
       progressBarElement.style.background = currentValue >= targetValue ? 'rgb(0, 120, 0)' : 'rgb(0, 0, 190)';
     });
-
-    // Update completed days display
+  
+    // Update lifetime totals
+    d.getElementById('total-pushups').innerText = data.lifetimeTotals['day-pushups'] || 0;
+    d.getElementById('total-squats').innerText = data.lifetimeTotals['day-squats'] || 0;
+    d.getElementById('total-situps').innerText = data.lifetimeTotals['day-situps'] || 0;
+    d.getElementById('total-running').innerText = (data.lifetimeTotals['day-running'] || 0).toFixed(1);
+  
+    // Update completed days
     const completedDaysElement = d.getElementById('completed-days');
-    completedDaysElement.innerText = data.completedDays || '0'; // Fallback to '0' if null
+    completedDaysElement.innerText = data.completedDays || '0';
   };
+  
 
   // Check if all tasks are completed
   const checkAllCompleted = () => {
@@ -101,47 +109,53 @@ if ('serviceWorker' in navigator) {
     const increaseBtn = d.getElementById(`${id}-increase`);
     const decreaseBtn = d.getElementById(`${id}-decrease`);
     const currentElement = d.getElementById(`${id}-current`);
-
+  
     let intervalId = null;
-
+  
     const startChange = (changeFn) => {
       changeFn();
       intervalId = setInterval(changeFn, 150);
     };
-
+  
     const stopChange = () => {
       clearInterval(intervalId);
       intervalId = null;
     };
-
+  
     const increase = () => {
       startChange(() => {
         data.progress[id] = id === 'day-running' ? (data.progress[id] || 0) + 0.1 : (data.progress[id] || 0) + 1;
+        data.lifetimeTotals[id] = id === 'day-running' 
+          ? (data.lifetimeTotals[id] || 0) + 0.1 
+          : (data.lifetimeTotals[id] || 0) + 1;
         currentElement.innerText = id === 'day-running' ? data.progress[id].toFixed(1) : data.progress[id];
-        checkAllCompleted(); // Recalculate allCompleted status dynamically
+        saveData();
+        updateUI();
       });
     };
-
+  
     const decrease = () => {
       startChange(() => {
         if (data.progress[id] > 0) {
           data.progress[id] = id === 'day-running' ? (data.progress[id] || 0) - 0.1 : (data.progress[id] || 0) - 1;
           currentElement.innerText = id === 'day-running' ? data.progress[id].toFixed(1) : data.progress[id];
-          checkAllCompleted(); // Recalculate allCompleted status dynamically
+          saveData();
+          updateUI();
         }
       });
     };
-
+  
     ['mousedown', 'touchstart'].forEach((event) => {
       increaseBtn.addEventListener(event, increase);
       decreaseBtn.addEventListener(event, decrease);
     });
-
+  
     ['mouseup', 'mouseleave', 'touchend', 'touchcancel'].forEach((event) => {
       increaseBtn.addEventListener(event, stopChange);
       decreaseBtn.addEventListener(event, stopChange);
     });
   };
+  
 
   // Initialize the app
   const init = () => {

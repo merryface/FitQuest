@@ -113,6 +113,42 @@ h1 {
   background: var(--secondary);
 }
 
+/* Lifetime Totals Section Styling */
+.totals {
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  padding: 0.3rem 1rem;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  box-shadow: 0 5 5px var(--shadow-color);
+  text-align: center;
+}
+
+.totals h3 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  color: var(--primary);
+  text-transform: uppercase;
+}
+
+.totals p {
+  font-size: 1.2rem;
+  margin: 0.5rem 0;
+  color: var(--primary);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 0.2rem;
+  border-bottom: 0.5px solid var(--secondary);
+}
+
+.totals p span {
+  font-weight: bold;
+  color: var(--primary);
+}
+
+
 /* Responsiveness */
 @media (max-width: 600px) {
   .task-button {
