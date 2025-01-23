@@ -4,53 +4,97 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="styles.css">
-    <script type="module" defer src="index.js"></script>
-    <script defer src="./scripts/pushups.js"></script>
-
+    <script defer type="module" src="index.js"></script>
+    <title>Quest Tracker</title>
     <style>
       html, body, * {
         font-family: Arial, sans-serif;
         box-sizing: border-box;
-        margin: 0
+        margin: 0;
       }
     </style>
-
-    <title>Quest Tracker</title>
 </head>
 <body>
   <h1>Quest Tracker</h1>
   <div class="dashboard">
     <p class="completed-days">Days Completed: <span id="completed-days">0</span></p>
     <div class="day-progress">
+
+      <!-- Pushups -->
       <div class="day-task">
         <h3 class="task-title">Pushups</h3>
-          <div class="task-totaliser">
-            <div class="task-totaliser-numbers">
-              <span id="day-pushups-current">0</span>
-              <span id="day-pushups-target">30</span>
-            </div>
-            <div class="progress-bar-container">
-              <div id="day-pushups-progress-bar"></div>
-            </div>
+        <div class="task-totaliser">
+          <div class="task-totaliser-numbers">
+            <span id="day-pushups-current">0</span>
+            <span id="day-pushups-target">30</span>
           </div>
-          <div class="task-update">
-            <button id="pushup-decrease" class="task-button">-</button>
-            <button id="pushup-increase" class="task-button">+</button>
+          <div class="progress-bar-container">
+            <div id="day-pushups-progress-bar"></div>
           </div>
+        </div>
+        <div class="task-update">
+          <button id="day-pushups-decrease" class="task-button">-</button>
+          <button id="day-pushups-increase" class="task-button">+</button>
+        </div>
       </div>
 
-      <div class="day-task" id="day-squats"></div>
+      <!-- Squats -->
+      <div class="day-task">
+        <h3 class="task-title">Squats</h3>
+        <div class="task-totaliser">
+          <div class="task-totaliser-numbers">
+            <span id="day-squats-current">0</span>
+            <span id="day-squats-target">50</span>
+          </div>
+          <div class="progress-bar-container">
+            <div id="day-squats-progress-bar"></div>
+          </div>
+        </div>
+        <div class="task-update">
+          <button id="day-squats-decrease" class="task-button">-</button>
+          <button id="day-squats-increase" class="task-button">+</button>
+        </div>
+      </div>
 
-      <div class="day-task" id="day-situps"></div>
+      <!-- Situps -->
+      <div class="day-task">
+        <h3 class="task-title">Situps</h3>
+        <div class="task-totaliser">
+          <div class="task-totaliser-numbers">
+            <span id="day-situps-current">0</span>
+            <span id="day-situps-target">40</span>
+          </div>
+          <div class="progress-bar-container">
+            <div id="day-situps-progress-bar"></div>
+          </div>
+        </div>
+        <div class="task-update">
+          <button id="day-situps-decrease" class="task-button">-</button>
+          <button id="day-situps-increase" class="task-button">+</button>
+        </div>
+      </div>
 
-      <div class="day-task" id="day-running"></div>
+      <!-- Running -->
+      <div class="day-task">
+        <h3 class="task-title">Running</h3>
+        <div class="task-totaliser">
+          <div class="task-totaliser-numbers">
+            <span id="day-running-current">0.0</span>
+            <span id="day-running-target">1.0km</span>
+          </div>
+          <div class="progress-bar-container">
+            <div id="day-running-progress-bar"></div>
+          </div>
+        </div>
+        <div class="task-update">
+          <button id="day-running-decrease" class="task-button">-</button>
+          <button id="day-running-increase" class="task-button">+</button>
+        </div>
+      </div>
+      
 
-      <div id="day-progress-bar"></div>
-
+      
     </div>
-    <div id="total-progress"></div>
-  </div>
-  <div class="task" id="task-container">
   </div>
 </body>
 </html>
