@@ -111,23 +111,31 @@ if ('serviceWorker' in navigator) {
     const currentElement = d.getElementById(`${id}-current`);
   
     let intervalId = null;
+    let isProcessing = false; // Flag to prevent overly frequent updates
   
     const startChange = (changeFn) => {
+      if (isProcessing) return; // Skip if already processing
+      isProcessing = true; // Set processing flag
       changeFn();
-      intervalId = setInterval(changeFn, 150);
+      intervalId = setInterval(changeFn, 300); // Slower interval
     };
   
     const stopChange = () => {
       clearInterval(intervalId);
       intervalId = null;
+      isProcessing = false; // Reset processing flag
     };
   
     const increase = () => {
       startChange(() => {
-        data.progress[id] = id === 'day-running' ? (data.progress[id] || 0) + 0.1 : (data.progress[id] || 0) + 1;
-        data.lifetimeTotals[id] = id === 'day-running' 
-          ? (data.lifetimeTotals[id] || 0) + 0.1 
+        data.progress[id] = id === 'day-running'
+          ? (data.progress[id] || 0) + 0.1
+          : (data.progress[id] || 0) + 1;
+  
+        data.lifetimeTotals[id] = id === 'day-running'
+          ? (data.lifetimeTotals[id] || 0) + 0.1
           : (data.lifetimeTotals[id] || 0) + 1;
+  
         currentElement.innerText = id === 'day-running' ? data.progress[id].toFixed(1) : data.progress[id];
         saveData();
         updateUI();
@@ -136,8 +144,17 @@ if ('serviceWorker' in navigator) {
   
     const decrease = () => {
       startChange(() => {
-        if (data.progress[id] > 0) {
-          data.progress[id] = id === 'day-running' ? (data.progress[id] || 0) - 0.1 : (data.progress[id] || 0) - 1;
+        const currentValue = data.progress[id] || 0;
+  
+        if (currentValue > 0) {
+          data.progress[id] = id === 'day-running'
+            ? currentValue - 0.1
+            : currentValue - 1;
+  
+          data.lifetimeTotals[id] = id === 'day-running'
+            ? Math.max((data.lifetimeTotals[id] || 0) - 0.1, 0)
+            : Math.max((data.lifetimeTotals[id] || 0) - 1, 0);
+  
           currentElement.innerText = id === 'day-running' ? data.progress[id].toFixed(1) : data.progress[id];
           saveData();
           updateUI();
@@ -155,6 +172,8 @@ if ('serviceWorker' in navigator) {
       decreaseBtn.addEventListener(event, stopChange);
     });
   };
+  
+  
   
 
   // Initialize the app
